@@ -1,0 +1,19 @@
+{
+    "name": "thomy/app-salon_php_mvc_js_sass",
+    "description": "App Salon",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MVC\\" : "./",
+            "Controllers\\" : "./controllers",
+            "Model\\" : "./models"
+        }
+    },
+    "authors": [
+        {
+            "name": "thomy2333",
+            "email": "thomyrb30@gmail.com"
+        }
+    ],
+    "require": {}
+}
