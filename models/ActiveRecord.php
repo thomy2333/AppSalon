@@ -22,15 +22,17 @@ class ActiveRecord {
     }
 
     
-    public function guardar(){
-        if (!is_null($this->id)) {
-            //Actualizar
-            $this->actualizar();
-         } else{
-            //Creando un nuevo registro
-            $this->crear();
-         }
-     }
+    public function guardar() {
+        $resultado = '';
+        if(!is_null($this->id)) {
+            // actualizar
+            $resultado = $this->actualizar();
+        } else {
+            // Creando un nuevo registro
+            $resultado = $this->crear();
+        }
+        return $resultado;
+    }
 
     public function crear(){
         //sanitizar los datos
@@ -43,12 +45,12 @@ class ActiveRecord {
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
 
+        // Resultado de la consulta
         $resultado = self::$db->query($query);
-
-        if($resultado){
-            //redireccionar al usuario
-            header('Location: /admin?resultado=1');
-        }
+        return [
+           'resultado' =>  $resultado,
+           'id' => self::$db->insert_id
+        ];
     }
 
     public function actualizar(){
@@ -158,6 +160,12 @@ class ActiveRecord {
 
         $resultado = self::consultaSQL($query);
 
+        return array_shift($resultado);
+    }
+
+    public static function where($columna, $valor){
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
+        $resultado = self::consultaSQL($query);
         return array_shift($resultado);
     }
 
