@@ -53,26 +53,25 @@ class ActiveRecord {
         ];
     }
 
-    public function actualizar(){
-       //sanitizar los datos
-       $atributos = $this->sanitizarAtributos();
+    public function actualizar() {
+        // Sanitizar los datos
+        $atributos = $this->sanitizarAtributos();
 
-       $valores = [];
-       foreach($atributos as $key => $value){
-        $valores[] = "{$key}='{$value}'";
-       }
+        // Iterar para ir agregando cada campo de la BD
+        $valores = [];
+        foreach($atributos as $key => $value) {
+            $valores[] = "{$key}='{$value}'";
+        }
 
-       $query = "UPDATE " . static::$tabla . " SET ";
-       $query .= join(', ', $valores );
-       $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
-       $query .= " LIMIT 1 ";
+        // Consulta SQL
+        $query = "UPDATE " . static::$tabla ." SET ";
+        $query .=  join(', ', $valores );
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " LIMIT 1 "; 
 
-       $resultado = self::$db->query($query);
-
-       if($resultado){
-                //redireccionar al usuario
-                header('Location: /admin?resultado=2');
-            }
+        // Actualizar BD
+        $resultado = self::$db->query($query);
+        return $resultado;
     }
 
     //eliminar un registro
@@ -127,6 +126,11 @@ class ActiveRecord {
     }
     
     //validacion 
+
+    public static function setErrores($tipo, $mensaje) {
+        static::$errores[$tipo][] = $mensaje;
+    }
+
     public static function getErrores(){
         return static::$errores;
     }
