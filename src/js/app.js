@@ -3,6 +3,7 @@ const pasoInicial = 1;
 const pasoFinal = 3;
 
 const cita = {
+    id: '',
     nombre: '',
     fecha: '',
     hora: '',
@@ -155,14 +156,12 @@ function seleccionarServicio(servicio){
         //agregarlo
         cita.servicios = [...servicios, servicio];
         divServicio.classList.add('seleccionado');
-    }       
-    
-    console.log(cita);
+    } 
 }
 
-function idCliente() {
-    cita.id = document.querySelector('#id').value;
-}
+ function idCliente() {
+     cita.id = document.querySelector('#id').value;
+ }
 
 function nombreCliente(){
     cita.nombre = document.querySelector('#nombre').value;
@@ -235,7 +234,7 @@ function mostrarResumen() {
     } 
 
     // Formatear el div de resumen
-    const { nombre, fecha, hora, servicios } = cita;
+    const { nombre, fecha, hora, servicios} = cita;
 
 
 
@@ -300,7 +299,45 @@ function mostrarResumen() {
     resumen.appendChild(botonReservar);
 }
 
-function reservarCita() {
-    console.log("reservar");
+async function reservarCita() {
+    const {id, fecha, hora, servicios, nombre} = cita;
 
+    const idServicios = servicios.map( servicio => servicio.id);
+
+    const datos = new FormData();
+    datos.append('usuarioId', id);
+    datos.append('fecha', fecha);
+    datos.append('hora', hora);
+    datos.append('servicios', idServicios);
+
+    try {
+        //peticion hacia la api
+        const url = 'http://localhost:3000/api/citas';
+        const respuesta = await fetch(url, {
+        method: 'POST',
+        body: datos
+        })
+
+        const resultado = await respuesta.json();
+
+        if(resultado.resultado){
+            Swal.fire({
+             icon: 'success',
+             title: 'Cita Creada',
+             text: 'Tu cita fue creada correctamente',
+             button: 'OK'
+            }).then( () => {
+             setTimeout(() => {
+                window.location.reload();
+             }, 3000);
+            })
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Hubo un error al guarda la cita'
+        })
+    }
+    //console.log([...datos]);
 }
