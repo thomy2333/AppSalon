@@ -79,10 +79,12 @@ class ActiveRecord {
         $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
         $resultado = self::$db->query($query);
 
-        if ($resultado) {
-            $this->borrarImagen();
-            header('Location: /admin?resultado=3');
-        }
+        return $resultado;
+
+        // if ($resultado) {
+        //     $this->borrarImagen();
+        //     header('Location: /admin?resultado=3');
+        // }
     }
 
     public function atributos(){
@@ -171,6 +173,12 @@ class ActiveRecord {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultaSQL($query);
         return array_shift($resultado);
+    }
+
+    //Consulta plana
+    public static function SQL($query){
+        $resultado = self::consultaSQL($query);
+        return $resultado;
     }
 
     public static function consultaSQL($query){

@@ -17,4 +17,18 @@ class Servicio extends ActiveRecord{
         $this->nombre = $args['nombre'] ?? '';
         $this->precio = $args['precio'] ?? '';
     }
+
+    public function validar(){
+        if(!$this->nombre){
+            self::$errores['error'][] = 'El Nombre ser servicio es Obligario';
+        }
+        if(!$this->precio){
+            self::$errores['error'][] = 'El precio ser servicio es Obligario';
+        }
+        if(!is_numeric($this->precio)){
+            self::$errores['error'][] = 'Formato no valido';
+        }
+
+        return self::$errores;
+    }
 }
